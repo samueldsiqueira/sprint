@@ -1,16 +1,18 @@
-interface IWorkOrderRequest{
-  description: string
-  mechanical: string
-  client: string
-  price: number
+// Essa interface para saber o que vem do insomnia
+interface IWorkOrderRequest {
+	description: string;
+	mechanical: string;
+	client: string;
+	price: number;
 }
 
-interface IWorkOrder extends IWorkOrderRequest{
-  start_date: Date
-  end_date: Date
-  id: number
+// E outra para tipar a ordem de serviço no banco de dados
+interface IWorkOrder extends IWorkOrderRequest {
+	startDate: Date;
+	endDate: Date;
+	id: number;
 }
+type WorkOrderRequiredKeys = "description" | "mechanical" | "client" | "price"
 
-const orders: Array<IWorkOrder> = []
 
-export default orders 
+export { IWorkOrder, IWorkOrderRequest, WorkOrderRequiredKeys };
