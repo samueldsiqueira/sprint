@@ -1,4 +1,4 @@
-import express, { Application, Request, Response, request } from 'express';
+import express, { Application, Request, Response } from 'express';
 import response from 'express';
 /* importo o express e o Application, que é a interface que vai tipar a interface do express */
 
@@ -28,7 +28,7 @@ const ids: Array<number> = []
 
 export default orders 
 
-app.post('/work-order', (request: Request, response: Response) => {
+app.post('/work-order', (request: Request, response: Response):Response => {
   const orderData: IWorkOrderRequest = request.body
   
   // retirando ID do objeto para validar se não existe outro ID igual
@@ -46,18 +46,19 @@ app.post('/work-order', (request: Request, response: Response) => {
   const newOrderData: IWorkOrder = {
     id:id,
     startDate: new Date(),
-    endDate: new Date(Date.now() + 86400 * 1000),
+    endDate: new Date(Date.now() * 1000),
     // aqui eu estou pegando data atual + os segundos que tem o dia e transformando em segundos;
     ...orderData
   }    
   ids.push(id)
   orders.push(newOrderData)
+
   response.status(201).json(newOrderData)
   // console.log(newOrderData)
   // return response.send('deu certo!')
 })
 
-app.get('/work-order', (request: Request, response: Response) => {
+app.get('/work-order', (request: Request, response: Response):Response => {
   return response.json(orders)
 })
 
