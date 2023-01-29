@@ -1,6 +1,8 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { ids, orders } from './database';
 import { IWorkOrderRequest, IWorkOrder, WorkOrderRequiredKeys } from './interfaces';
+import request from 'express';
+import response from 'express';
 
 const validateDataOrder = (payload: any): IWorkOrderRequest => {
 	const keys: Array<string> = Object.keys(payload);
@@ -16,6 +18,19 @@ const validateDataOrder = (payload: any): IWorkOrderRequest => {
 	}
 
 	return payload;
+};
+const consoleLogMiddleware = (request: Request, response: Response, next: NextFunction): Response | void => {
+	console.log('Entrou no primeiro middleware');
+	return next();
+};
+const consoleLogRequestMiddleware = (request: Request, response: Response, next: NextFunction): Response | void => {
+	console.log(request);
+	if (request.body.status === undefined) {
+		return response.status(400).json({
+			message: 'Status is undefined',
+		});
+	}
+	return next();
 };
 
 const createWorkOrder = (request: Request, response: Response): Response => {
@@ -58,4 +73,24 @@ const listWorkOrder = (request: Request, response: Response): Response => {
 	return response.json(orders);
 };
 
-export { createWorkOrder, listWorkOrder };
+const retrieveWorkOrder = (request: Request, response: Response): Response => {
+  const indexWorkOrder: number = request.workOrder.indexWorkOrder;
+  
+	return response.json(orders[indexWorkOrder]);
+};
+
+const deleteWorkOrder = (request: Request, response: Response): Response => {
+	const indexWorkOrder: number = request.workOrder.indexWorkOrder;
+	orders.splice(indexWorkOrder, 1);
+	return response.status(204).send();
+};
+
+const updateWorkOrder = (request: Request, response: Response): Response => { 
+  const indexWorkOrder: number = request.workOrder.indexWorkOrder;
+
+  orders[indexWorkOrder] = { ...orders[indexWorkOrder], ...request.body }
+  
+  return response.json(orders[indexWorkOrder])
+}
+
+export { createWorkOrder, listWorkOrder, retrieveWorkOrder, deleteWorkOrder, updateWorkOrder };
