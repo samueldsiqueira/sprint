@@ -1,8 +1,6 @@
-import { NextFunction, Request, Response } from 'express';
+import {  Request, Response } from 'express';
 import { ids, orders } from './database';
 import { IWorkOrderRequest, IWorkOrder, WorkOrderRequiredKeys } from './interfaces';
-import request from 'express';
-import response from 'express';
 
 const validateDataOrder = (payload: any): IWorkOrderRequest => {
 	const keys: Array<string> = Object.keys(payload);
@@ -18,19 +16,6 @@ const validateDataOrder = (payload: any): IWorkOrderRequest => {
 	}
 
 	return payload;
-};
-const consoleLogMiddleware = (request: Request, response: Response, next: NextFunction): Response | void => {
-	console.log('Entrou no primeiro middleware');
-	return next();
-};
-const consoleLogRequestMiddleware = (request: Request, response: Response, next: NextFunction): Response | void => {
-	console.log(request);
-	if (request.body.status === undefined) {
-		return response.status(400).json({
-			message: 'Status is undefined',
-		});
-	}
-	return next();
 };
 
 const createWorkOrder = (request: Request, response: Response): Response => {
